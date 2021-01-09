@@ -1,6 +1,8 @@
 # Setup Your Environment
 
-The plan is to turn this into a create-ract-app template. Until that time, we encourage you to fork this repo and follow these steps to get your app running in less than 30 minutes.
+The plan is to turn this into a create-ract-app template. Until that time, we encourage you to fork and clone this repo and follow these steps to get your app running in less than 30 minutes.
+
+From the command line, run `npm install`.
 
 1. Copy the `.env.example` file to a new `.env` file
 2. Decide on a Claims Namespace.
