@@ -1,0 +1,34 @@
+fragment testDetails on Test {
+  id
+  test
+}
+
+query queryTest {
+  queryTest {
+    ...testDetails
+  }
+}
+
+mutation addTest($test: AddTestInput!) {
+  addTest(input: [$test]) {
+    test {
+      ...testDetails
+    }
+  }
+}
+
+mutation updateTest($id: ID!, $patch: TestPatch!) {
+  updateTest(input: { filter: { id: [$id] }, set: $patch }) {
+    test {
+      ...testDetails
+    }
+  }
+}
+
+mutation deleteTest($id: ID!) {
+  deleteTest(filter: { id: [$id] }) {
+    test {
+      id
+    }
+  }
+}

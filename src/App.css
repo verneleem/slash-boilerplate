@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 60px;
   pointer-events: none;
 }
 
@@ -13,19 +13,49 @@
   }
 }
 
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-transform: scale(0.8);
+  }
+  50% {
+    -webkit-transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(0.8);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.8);
+  }
+}
+
+.Slash-logo {
+  /* -webkit-animation: pulse 2s linear infinite;
+  animation: pulse 3s linear infinite; */
+  height: 60px;
+}
+
 .App-header {
-  background-color: #282c34;
+  background-color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #282c34;
 }
 
 .App-link {
-  color: #61dafb;
+  color: #e50695;
 }
 
 @keyframes App-logo-spin {

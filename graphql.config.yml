@@ -1,0 +1,3 @@
+schema: ${REACT_APP_SLASH_GRAPHQL_ENDPOINT}
+documents:
+  - ./slashFrags.graphql

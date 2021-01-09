@@ -1,46 +1,84 @@
-# Getting Started with Create React App
+# Setup Your Environment
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The plan is to turn this into a create-ract-app template. Until that time, we encourage you to fork this repo and follow these steps to get your app running in less than 30 minutes.
 
-## Available Scripts
+1. Copy the `.env.example` file to a new `.env` file
+2. Decide on a Claims Namespace.
 
-In the project directory, you can run:
+- An example of a Namespace is `https://my.app.io/jwt/claims`
+- This does not have to be a weblink, but that is the common practice to ensure uniqueness
+- If you use a weblink, you do not need to have anything on that link. It is merely used for uniqueness.
 
-### `npm start`
+3. Copy your Namespce to the `.env` variable for `REACT_APP_SLASH_AUTH_NAMESPACE`
+4. Decide on a Header token name.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- This header token by default is `X-My-App-Auth`
+- You can use the default or change to your own name.
+- We recommend to use something unique and not conflit with [Header Field Definitions](https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html) already in use.
+- It is common to also use `auth` or `token` here.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+5. Copy your Header token name to the `.env` variable for `REACT_APP_SLASH_AUTH_HEADER`
+6. Follow the steps below to configure Slash GraphQL and Auth0
 
-### `npm test`
+## Create a Slash GraphQL Instance - Part 1
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Create an account with Slash [GraphQL](https://slash.dgraph.io)
+2. Launch a new backend
+3. Copy the GraphQL Endpoint URL to the `.env` variable for `REACT_APP_SLASH_GRAPHQL_ENDPOINT`
 
-### `npm run build`
+## Configure Auth0
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Create an account on auth0.com
+2. Create a new Application
+3. From the Application Settings on Auth0, copy the Domain to `.env` `REACT_APP_AUTH0_DOMAIN`
+4. From the Application Settings on Auth0, copy the Client ID to `.env` `REACT_APP_AUTH0_CLIENT_ID`
+5. In the Application Settings on Auth0, set the Allowed Callback URLs, Allowed Logout URLs, and the Allowed Web Origins to your domain. For developing locally, this would most likey be `http://localhost:3000/`
+6. Run the command `npm run auth0Rule-gen` to replace environment variables in `/deploy/auth0RuleTemplate.js` generating the `auth0Rule.js` file and add to auth0.com as a new rule.
+7. Retrieve your Certificate `[Domain].pem` file
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- In the Application Setting on Auth0, copy the Domain
+- In a web browser of your choice, paste in the domain followed by `/pem`
+  For example `dev-12abcdef.us.auth0.com/pem`
+- This will download a file named matching your Domain with a `.pem` extension.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+8. Move this file to the deploy directory and rename it to `cert.pem`
 
-### `npm run eject`
+## Deploy schema to Slash GraphQL
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+**NOTE**: Running the following command will override the schema on your Slash GraphQL Instance. If you are running this on an existing schema, first, update your schema in `deploy/schema.graphql`. The `Dgraph.Authorization` will be added automatically.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+From the command line run the command: `npm run slash-deploy`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+This will do the following:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- Login to Slash with the CLI (will open a browser window to confirm code)
+- Update the `deploy/schema.graphql` file using the cert.pem and .env variables declared in the previous steps.
+- Deploys the updated schema to Slash
+- Updated the generated GraphQL types and operation hook files.
 
-## Learn More
+## Start the App
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+From the command line run the command: `npm start`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This will open a new browser tab for your app, allowing you to do the following:
+
+- See a status of connectivity to Slash. E.g. "Successfully connected to Slash GraphQL! Found X user(s)"
+- Perform CRUD operations with the Test type. (See `src/TestNodes` for example code)
+- Authenticate with Auth0 showing one of the following messages and buttons:
+  - "There is currently no Authenticated User" | "Authenticate with Auth0"
+  - "A login was successful with the following user data: [json]" | "Logout"
+- Quick Link to [Learn Slash](https://dgraph.io/learn)
+- Quick Link to [Learn React](https://reactjs.org/)
+
+## Develop your App
+
+We have included the basics here to get you started with your own app development very quickly. We even have included some recommended VS Code extensions that may be helpful to you.
+
+## Noteworthy Tidbits:
+
+- If you delete all operations.graphql file and run the `generate` script, it will result in errors. To resolve this, disable `withHooks` in codegen.yml
+- The graphql.vscode-graphql extension is capable of running queries and mutations in the workspace. To do this though, you will need to edit graphql.config.yml to have your actual URL instead of using the environment variable.
+- We have included a helper utility `onDeleteUpdateCache` to update the cache when running delete mutations. To see it in action, see src/TestNodes/index.tsx
+- If you want to customize your login logic and add claims, read the comments in `auth0RuleTemplate.js`.
+- This project is purposefully left mostly unstyled. You may already have your favorite style system or prefer to start from scratch. We recommend using [Semantic UI React](https://react.semantic-ui.com/)
+-
