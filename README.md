@@ -81,4 +81,4 @@ We have included the basics here to get you started with your own app developmen
 - We have included a helper utility `onDeleteUpdateCache` to update the cache when running delete mutations. To see it in action, see src/TestNodes/index.tsx
 - If you want to customize your login logic and add claims, read the comments in `auth0RuleTemplate.js`.
 - This project is purposefully left mostly unstyled. You may already have your favorite style system or prefer to start from scratch. We recommend using [Semantic UI React](https://react.semantic-ui.com/)
--
+- In the default schema, the `User` type is used for storing and relating authenticated users to other data. The `Test` is used to display the CRUD operation example. The `RestrictedByRole` and `RestrictedByOwner` examplify the two different types of auth rules. If you change the `User` type other than adding more fields, the auth0Rule will no longer work correctly and will need updated.
