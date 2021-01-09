@@ -149,8 +149,8 @@ function App() {
     >
       <BrowserRouter>
         <Switch>
+          <Route exact path="/test" component={TestNodes} />
           <Route path="/" component={Default} />
-          <Route path="/test" component={TestNodes} />
         </Switch>
       </BrowserRouter>
     </ApolloProvider>
